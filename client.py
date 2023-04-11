@@ -18,16 +18,28 @@ ipadress = input("Ingrese IP a conectar : ")
 
 server_address = (ipadress, port)
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect(server_address)
+try:
+    client_socket.connect(server_address)
+except:
+    print("No se pudo conectar")
+    logging.warning("No se pudo conectar")
 logging.info(str(datetime.datetime.now())+" Conectado a servidor "+str(server_address))
 
 while True:
     message = input("Ingrese mensaje : ")
     logging.info(str(datetime.datetime.now())+" Mensaje a enviar : "+str(message))
     message = de_codificate(message)
-    client_socket.sendall(message.encode())
+    try:
+        client_socket.sendall(message.encode())
+    except:
+        print("No se pudo enviar")
+        logging.warning("No se pudo enviar")
     logging.info(str(datetime.datetime.now())+" Mensaje codificado enviado : "+str(message))
-    data = client_socket.recv(1024)
+    try:
+        data = client_socket.recv(1024)
+    except:
+        print("No se pudo recibir")
+        logging.warning("No se pudo recibir")
     if not data:
         break
     response = data.decode()
