@@ -19,19 +19,32 @@ server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 ipadress = input("Ingrese IP : ")
 
-server_socket.bind((ipadress, port))
+try:
+    server_socket.bind((ipadress, port))
+except:    
+    print("No se pudo crear el server en la ip: "+ str(ipadress))
+    logging.warning("No se pudo crear el server en la ip: "+ str(ipadress))
 server_socket.listen(1)
 
 print("Servidor iniciado en "+str(port))
 logging.info(str(datetime.datetime.now())+" Servidor iniciado en "+str(port))
 
-client_socket, client_address = server_socket.accept()
+try:
+    client_socket, client_address = server_socket.accept()
+except:
+    print("Fallo la recepción del cliente")
+    logging.warning("Fallo la recepción del cliente")
+
 print("Conectado a "+str(client_address))
 logging.info(str(datetime.datetime.now())+" Conectado a "+str(client_address))
 
 
 while True:
-    data = client_socket.recv(1024)
+    try:
+        data = client_socket.recv(1024)
+    except:
+        print("Error de recepción de mensaje")
+        logging.warning("Error de recepción de mensaje")
     if not data:
         break
     message = data.decode()
@@ -44,7 +57,13 @@ while True:
     response = input("Ingrese mensaje : ")
     logging.info(str(datetime.datetime.now())+" Mensaje a enviar: "+ str(message))
     response = de_codificate(response)
-    client_socket.sendall(response.encode())
+    
+    try:
+        client_socket.sendall(response.encode())
+    except:
+        print("Fallo en el envío del mensaje")
+        logging.warning("Fallo en el envío del mensaje")
+        
     logging.info(str(datetime.datetime.now())+" Mensaje enviado codificado: "+ str(response))
 
 client_socket.close()
