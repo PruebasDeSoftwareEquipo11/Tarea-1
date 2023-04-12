@@ -13,9 +13,17 @@ def de_codificate(mensaje):
     return mensaje
 
 
-port = 10500
+port = 12345
 logging.basicConfig(filename='server.log', encoding='utf-8', level=logging.DEBUG)
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
+
+tipodeIP = input("Ingrese tipo de IP a ingresar (1 = IPv4, 2 = IPv6) : ")
+
+if tipodeIP == "2":
+    server_socket = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+else:
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 ipadress = input("Ingrese IP : ")
 
